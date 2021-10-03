@@ -13,6 +13,7 @@ class App extends React.Component {
     }
     // this.increaseQuantity = this.increaseQuantity.bind(this);
     // this.testing();
+    this.db = firebase.firestore();
   }
   //called after app is mounted
   // componentDidMount() {
@@ -34,8 +35,7 @@ class App extends React.Component {
   // } 
 
   componentDidMount() {
-    firebase
-      .firestore()
+    this.db
       .collection('products')
       .onSnapshot((snapshot) => { //onSnapshot is an event listener and called whenever any change in db/products collection(observer)
         const products = snapshot.docs.map((doc)=>{
@@ -47,7 +47,8 @@ class App extends React.Component {
           products,
           loading: false,
         })
-      }) //attaches a listener for query snapshot events(whenever change in db)
+      }) 
+      //attaches a listener for query snapshot events(whenever change in db)
   } 
 
   
@@ -113,11 +114,30 @@ class App extends React.Component {
     return cartTotal;
   }
 
+  addProduct = ()=>{
+    this.db
+        .collection('products')
+        .add({
+          img:'',
+          price:900,
+          qty:3,
+          title: 'Washing Machine',
+        }) //in the promise returned we will get the reference to the object added
+        .then((docRef)=>{
+          console.log('product added' ,docRef);
+        })
+        .catch((error)=>{
+          console.log('error ', error);
+        })
+
+  }
+
   render () {
     const { products, loading } = this.state;
     return (
       <div className="App">
         <Navbar count={this.getCartCount()} />
+        <button style={{padding:20, fontSize:20}} onClick={this.addProduct}>Add a product</button>
         <Cart
           onIncreaseQuantity={this.handleIncreaseQuantity}
           onDecreaseQuantity={this.handleDecreaseQuantity}
