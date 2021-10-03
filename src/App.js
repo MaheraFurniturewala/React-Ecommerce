@@ -8,7 +8,8 @@ class App extends React.Component {
   constructor () {   
     super();
     this.state = {
-      products: []
+      products: [],
+      loading: true,
     }
     // this.increaseQuantity = this.increaseQuantity.bind(this);
     // this.testing();
@@ -27,6 +28,7 @@ class App extends React.Component {
         })
         this.setState({
           products,
+          loading: false,
         })
       })
   } 
@@ -93,16 +95,17 @@ class App extends React.Component {
   }
 
   render () {
-    const { products } = this.state;
+    const { products, loading } = this.state;
     return (
       <div className="App">
         <Navbar count={this.getCartCount()} />
         <Cart
-          products={products}
           onIncreaseQuantity={this.handleIncreaseQuantity}
           onDecreaseQuantity={this.handleDecreaseQuantity}
           onDeleteProduct={this.handleDeleteProduct}
+          products={products}
         />
+        {loading && <h1>Loading Products...</h1>}
         <div style={ {padding: 10, fontSize: 20} }>TOTAL: {this.getCartTotal()} </div>
       </div>
     );
