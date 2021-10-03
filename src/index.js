@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import 'firebase/firestore'
-import { initializeApp } from "firebase/app";
+import 'firebase/firestore';
+import * as firebase from "firebase";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDRYWmqVLOdPwNWNndpEViT0OluHhI_Q6g",
@@ -15,6 +15,6 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 
 ReactDOM.render( <App />, document.getElementById('root'));
