@@ -15,12 +15,29 @@ class App extends React.Component {
     // this.testing();
   }
   //called after app is mounted
+  // componentDidMount() {
+  //   firebase
+  //     .firestore()
+  //     .collection('products')
+  //     .get()
+  //     .then((snapshot) => {
+  //       const products = snapshot.docs.map((doc)=>{
+  //         const data = doc.data();
+  //         data['id'] = doc.id;
+  //         return data;
+  //       })
+  //       this.setState({
+  //         products,
+  //         loading: false,
+  //       })
+  //     })
+  // } 
+
   componentDidMount() {
     firebase
       .firestore()
       .collection('products')
-      .get()
-      .then((snapshot) => {
+      .onSnapshot((snapshot) => { //onSnapshot is an event listener and called whenever any change in db/products collection(observer)
         const products = snapshot.docs.map((doc)=>{
           const data = doc.data();
           data['id'] = doc.id;
@@ -30,8 +47,10 @@ class App extends React.Component {
           products,
           loading: false,
         })
-      })
+      }) //attaches a listener for query snapshot events(whenever change in db)
   } 
+
+  
   
 
   handleIncreaseQuantity = (product) => {
