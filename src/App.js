@@ -57,12 +57,26 @@ class App extends React.Component {
   handleIncreaseQuantity = (product) => {
     const { products } = this.state;
     const index = products.indexOf(product);
+    //instead of increasing quantity in state increase it in firebase cause that would also increase in state and ui
+    // products[index].qty += 1;
+    // this.setState({
+    //   products
+    // })
+    //we get reference of the product whose quantity is changed
+    const docRef = this.db.collection('products').doc(products[index].id);
+    docRef
+       .update({
+         qty:products[index].qty + 1,
+       })
+       .then(()=>{
+         console.log('doc updated successfully');
+       })
+       .catch((error)=>{
+         console.log("Error : ", error);
+       })
 
-    products[index].qty += 1;
 
-    this.setState({
-      products
-    })
+
   }
   handleDecreaseQuantity = (product) => {
     const { products } = this.state;
@@ -72,20 +86,44 @@ class App extends React.Component {
       return;
     }
 
-    products[index].qty -= 1;
+    // products[index].qty -= 1;
 
-    this.setState({
-      products
-    })
+    // this.setState({
+    //   products
+    // })
+
+
+    const docRef = this.db.collection('products').doc(products[index].id);
+    docRef
+       .update({
+         qty:products[index].qty - 1,
+       })
+       .then(()=>{
+         console.log('doc updated successfully');
+       })
+       .catch((error)=>{
+         console.log("Error : ", error);
+       })
   }
+
   handleDeleteProduct = (id) => {
     const { products } = this.state;
+    
 
     const items = products.filter((item) => item.id !== id); // [{}]
+    const docRef = this.db.collection('products').doc(id);
+    // this.setState({
+    //   products: items
+    // })
 
-    this.setState({
-      products: items
-    })
+    docRef
+      .delete()
+      .then(()=>{
+        console.log("Deleted cart item successfully");
+      })
+      .catch((error)=>{
+        console.log("Error : ",error);
+      })
   }
 
   getCartCount = () => {
@@ -137,7 +175,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <Navbar count={this.getCartCount()} />
-        <button style={{padding:20, fontSize:20}} onClick={this.addProduct}>Add a product</button>
+        {/* <button style={{padding:20, fontSize:20}} onClick={this.addProduct}>Add a product</button> */}
         <Cart
           onIncreaseQuantity={this.handleIncreaseQuantity}
           onDecreaseQuantity={this.handleDecreaseQuantity}
