@@ -37,6 +37,7 @@ class App extends React.Component {
   componentDidMount() {
     this.db
       .collection('products')
+      .orderBy('price','desc')
       .onSnapshot((snapshot) => { //onSnapshot is an event listener and called whenever any change in db/products collection(observer)
         const products = snapshot.docs.map((doc)=>{
           const data = doc.data();
@@ -190,3 +191,6 @@ class App extends React.Component {
 }
 
 export default App;
+
+
+//use .where for conditional querying 
